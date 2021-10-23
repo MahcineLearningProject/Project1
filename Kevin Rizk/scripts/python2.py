@@ -1,4 +1,5 @@
 import numpy as np
+from proj1_helpers import *
 
 
 def standardize(x):
