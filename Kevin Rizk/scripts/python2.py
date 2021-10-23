@@ -2,6 +2,31 @@ import numpy as np
 from proj1_helpers import *
 
 
+
+def split_data(x, y, ratio, seed=6):
+    """
+    split the dataset based on the split ratio. If ratio is 0.8 
+    you will have 80% of your data set dedicated to training 
+    and the rest dedicated to testing
+    """
+    # set seed
+    np.random.seed(seed)
+    # ***************************************************
+    data_size = len(y)
+    n = int(ratio*data_size)
+    shuffle_indices = np.random.permutation(np.arange(data_size))
+    shuffled_y = y[shuffle_indices]
+    shuffled_tx = x[shuffle_indices]
+    tx_tr = shuffled_tx[0:n,:]
+    tx_te = shuffled_tx[n+1:,:]
+    y_tr = shuffled_y[0:n]
+    y_te = shuffled_y[n+1:]
+    # INSERT YOUR CODE HERE
+    # split the data based on the given ratio: TODO
+    # ***************************************************
+    return tx_tr,tx_te,y_tr,y_te
+
+
 def standardize(x):
     ''' fill your code in here...
     '''
@@ -12,9 +37,18 @@ def standardize(x):
 
 def loss_really(weights,y_te,tx_te):    
     y_pred = predict_labels(weights, tx_te)
-    print(y_pred)
     s = y_pred != y_te
     return sum(s)/len(y_te)
+
+
+def new_build(tX):
+    n = tX.shape[0]
+    tx = np.ones((n,1))
+    for i in range(tX.shape[1]):
+        print(i)
+        tx = np.concatenate((tx,tX[:,i:]*tX[:,i:i+1]),1)
+    return tx
+
 
 
 def build_poly(tX,d):
@@ -23,7 +57,6 @@ def build_poly(tX,d):
     for i in range(d):
         tx = np.concatenate((tx,np.power(tX,i+1)),1)
     return tx
-
 
 
 def compute_loss(y, tx, w):
