@@ -1,6 +1,13 @@
 import numpy as np
 from proj1_helpers import *
 
+def build_poly_plus_missing(tX, degree):
+    tX, missing_vectors = missing(tX)
+    polx = build_poly(tX, degree)
+    polx = polx.reshape(N, -1)
+    polx = np.append(polx, missing_vectors, axis = 1)
+    return polx
+
 def missing(tX):
     # change the -999 to 0 in tX and 
     # create new columns missing_vectors = 1 if it misses the data for the actual variable and 0 otherwise
