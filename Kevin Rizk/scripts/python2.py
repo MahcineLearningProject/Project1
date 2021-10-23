@@ -9,6 +9,12 @@ def standardize(x):
     
     return std_data
 
+def loss_really(weights,y_te,tx_te):    
+    y_pred = predict_labels(weights, tx_te)
+    print(y_pred)
+    s = y_pred != y_te
+    return sum(s)/len(y_te)
+
 
 def build_poly(tX,d):
 
