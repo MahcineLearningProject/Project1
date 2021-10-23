@@ -1,8 +1,7 @@
 import numpy as np
 from proj1_helpers import *
 
-def build_poly_plus_missing(tX, degree):
-    tX, missing_vectors = missing(tX)
+def build_poly_plus_missing(tX, degree, missing_vectors):
     polx = build_poly(tX, degree)
     polx = polx.reshape(N, -1)
     polx = np.append(polx, missing_vectors, axis = 1)
