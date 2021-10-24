@@ -3,6 +3,28 @@ from proj1_helpers import *
 
 
 
+
+def balance_data_stupid(x,y,seed=6):
+
+    np.random.seed(seed)
+
+    shuffle_indices = np.random.permutation(np.arange(len(y)))
+    shuffled_y = y[shuffle_indices]
+    shuffled_tx = x[shuffle_indices]
+
+    a1 = np.sum(shuffled_y==1)
+    count = 0
+    indices = []
+    for i in range(len(shuffled_y)):
+        if shuffled_y[i] == 1:
+            indices.append(i)
+        else:
+            if count < a1:
+                indices.append(i)
+                count = count +1
+    return (x[indices ,: ], shuffled_y[indices]) 
+
+
 def split_data(x, y, ratio, seed=6):
     """
     split the dataset based on the split ratio. If ratio is 0.8 
@@ -27,12 +49,19 @@ def split_data(x, y, ratio, seed=6):
     return tx_tr,tx_te,y_tr,y_te
 
 
-def standardize(x):
+def standardize(x, special = False):
     ''' fill your code in here...
+
     '''
-    centered_data = x - np.mean(x, axis=0)
+    y = x
+    if (special) :
+        y = y[:,1:]
+
+    centered_data = y - np.mean(y, axis=0)
     std_data = centered_data / np.std(centered_data, axis=0)
-    
+    if (special):
+        std_data = np.concatenate((std_data,x[:,0:1]),1)
+
     return std_data
 
 def loss_really(weights,y_te,tx_te):    
@@ -164,13 +193,13 @@ def sigmoid(t):
 
 def calculate_loss_sigmoid(y, tx, w):
     """compute the loss: negative log likelihood."""
-    S = sigmoid(np.dot(tx,w))
-    n = len(y)
-    return 1./n*(- y @ log_plus(S) - (1-y) @ log_plus(1-S))
+    m = len(y)
+    S = sigmoid(tx @ w)
+    return (1/m)*(- y @ log_plus(S) - (1-y) @ log_plus(1-S))
 
 def calculate_gradient_sigmoid(y, tx, w):
-    n = len(y)
-    return 1./n*np.dot(tx.T, sigmoid(np.dot(tx,w)) - y) 
+    m = len(y)
+    return (1/m)*(tx.T @ (sigmoid(tx @ w) - y))
 
 
 def learning_by_gradient_descent(y, tx, w, gamma):
@@ -194,12 +223,14 @@ def logistic_regression(y,tx,initial_w,max_iters,gamma):
         loss , w = learning_by_gradient_descent(y,tx,w,gamma)
         losses.append(loss)
         ws.append(w)
+        if (n_iter % 10 == 0):
+            print(loss)
 
     return losses, ws[-1]
 
 def log_plus(x):
     y = x
-    y[y < 1e-10] = 1e-10
+    y[y < 1e-50] = 1e-50
     return(np.log(y))
 
 
