@@ -1,5 +1,6 @@
 import time
 from helpers import *
+from proj1_helpers import *
 from gradient_descent import compute_loss
 from plots import cross_validation_visualization
 
@@ -9,23 +10,12 @@ def standardize(x):
     x = x - mean_x
     std_x = np.std(x)
     x = x / std_x
-    return x, mean_x, std_x
+    return x
 
-def change_data(tx):
-    #22 to get pri_jet
-    # 11 columns contain undefined numbers : 0,4,5,6,12,26,27,28, if pri <=1 ; 23,24,25 if pri=0
+
+def missing(tx):
     missing = tx[:,[0,4,5,6,12,23,24,25,26,27,28]]
     N = tx.shape[0]
-    d = tx.shape[1]
-    
-    for i in range(tx.shape[0]):
-        if tx[i,22]==0:
-            tx[i,[23,24,25]] = 0
-        if tx[i,22]<=1:
-            tx[i,[4,5,6,12,26,27,28]] = 0
-        if np.abs(tx[i,0])==999:
-            tx[i,0]=0
-            
     # Create the missing vectors
     for i in range(missing.shape[0]):
         for j in range(missing.shape[1]):
@@ -34,7 +24,7 @@ def change_data(tx):
             else:
                 missing[i,j] = 0
 
-    # Extract the 3 differents missing vectors
+    # Extract the different missing vectors
     add_missing_col = missing[:,0].reshape((N,1))
     for i in range(1,missing.shape[1]):
         j = 0
@@ -43,8 +33,63 @@ def change_data(tx):
                 break
             j = j+1
             if j == add_missing_col.shape[1]:
-                add_missing_col = np.append(add_missing_col,missing[:,i].reshape((N,1)),axis=1)    
-    return tx, add_missing_col
+                add_missing_col = np.append(add_missing_col,missing[:,i].reshape((N,1)),axis=1)
+    return add_missing_col
+
+def change_data(tx):
+    #22 to get pri_jet
+    # 11 columns contain undefined numbers : 0,4,5,6,12,26,27,28, if pri <=1 ; 23,24,25 if pri=0
+    tx_new = tx.copy()
+    N = tx.shape[0]
+    d = tx.shape[1]
+    
+    for i in range(tx_new.shape[0]):
+        if tx_new[i,22]==0:
+            tx_new[i,[23,24,25]] = 0
+        if tx_new[i,22]<=1:
+            tx_new[i,[4,5,6,12,26,27,28]] = 0
+        if np.abs(tx_new[i,0])==999:
+            tx_new[i,0]=0
+        
+    return tx_new
+
+
+def change_data_missing(tx):
+    tx_new = change_data(tx)
+    missing_vect = missing(tx)
+    return tx_new, missing_vect
+
+
+def build_poly(x, degree):
+    """polynomial basis functions for input data x, for j=0 up to j=degree."""
+    N = x.shape[0]
+    phi = np.ones((N,1))
+    for i in range(1,degree+1):
+        x_next = x**i
+        phi = np.concatenate((phi, x_next), axis = 1)
+    return phi
+    raise NotImplementedError
+    
+
+def build_poly_missing(tx, missing, degree):
+    N = tx.shape[0]
+    
+    # Create polynomial
+    phi = build_poly(tx, degree)
+    phi = phi.reshape(N,-1)
+    # Add the columns of mising features
+    phi = np.append(phi, missing, axis= 1)
+    
+    return phi
+    raise NotImplementedError
+    
+    
+def compute_accuracy(weights, y_true, tx_test):
+    y_pred = predict_labels(weights, tx_test)
+    diff = y_true-y_pred
+    error = np.sum(diff!=0)/len(y_true)
+    return error
+
 
 def least_squares_GD(y, tx, initial_w, max_iters, gamma):
     """ run linear regression using gradient descent with step size gamma"""
@@ -102,10 +147,9 @@ def split_data(y, tX, ratio, seed=44):
 def ridge_regression(y, tx, lambda_):
     """implement ridge regression."""
     N = len(y)
-    w_ri = np.linalg.lstsq(tx.T @ tx + lambda_*(2*N)*np.eye(tx.shape[1]), tx.T @ y, rcond = None)[0]
-    loss = 1/(2*N)*np.linalg.norm(y-tx @ w_ri)**2+lambda_*(w_ri.T @ w_ri)
-    
-    return w_ri, loss
+    w_ri = np.linalg.solve(tx.T @ tx + lambda_*np.eye(tx.shape[1]), tx.T @ y)
+    loss = compute_loss(y, tx, w_ri)
+    return w_ri, np.sqrt(2*loss)
     raise NotImplementedError
     
 def build_k_indices(y, k_fold, seed):
@@ -119,29 +163,7 @@ def build_k_indices(y, k_fold, seed):
     return np.array(k_indices) # return a matrix. K-th row contains indices corresponding to the k-th fold
     raise NotImplementedError
     
-def build_poly(tx, degree):
-    """polynomial basis functions for input data x, for j=0 up to j=degree."""
-    # ***************************************************
-    tx_new = tx.copy()
-    tx_new, missing = change_data(tx_new)
-    N = tx_new.shape[0]
-    d = tx_new.shape[1]  
-    
-    # Create polynomial
-    phi = np.ones((N,d*(degree+1)+3))
-    k=1
-    while k<=degree:
-        for i in range(d):
-            phi[:,d*k+i] = tx[:,i]**k
-        k = k+1
-        
-    # Add 3 features corresponding to missing vectors
-    for i in range(missing.shape[1]):
-        phi[:,-i-1] = missing[:,i]
-    
-    return phi
-    # ***************************************************
-    raise NotImplementedError
+
     
 def cross_validation(y, tx, k_indices, k, lambda_, degree):
     """return the loss of ridge regression."""
