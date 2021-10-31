@@ -25,7 +25,7 @@ def cleanse_data_col(tx,cols):
 
 
 
-def divide_set (tx,y):
+def divide_set(tx,y):
     """ Divide the set into 4 smaller depending of the value of the column 22 and 
     removes the column where there is undefinied set. 
     Returb the 4 different set with vectors containing the missing value of the first column """
@@ -124,7 +124,7 @@ def loss_really(weights,y_te,tx_te):
     '''
     y_pred = predict_labels(weights, tx_te)
     s = y_pred != y_te
-    return sum(s)/len(y_te)
+    return np.sum(s)/len(y_te)
 
 
 def build_poly(x, degree):
@@ -204,7 +204,7 @@ def log_plus(x):
     return(np.log(y))
 
 
-    def batch_iter(y, tx, batch_size, num_batches=1, shuffle=True):
+def batch_iter(y, tx, batch_size, num_batches=1, shuffle=True):
     """
     Generate a minibatch iterator for a dataset.
     Takes as input two iterables (here the output desired values 'y' and the input data 'tx')

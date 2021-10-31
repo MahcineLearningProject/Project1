@@ -1,6 +1,6 @@
 import numpy as np
 from proj1_helpers import *
-from support_code import *
+
 
 
 
