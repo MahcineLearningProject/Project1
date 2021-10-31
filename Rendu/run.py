@@ -12,8 +12,7 @@ def main():
     y, tX, ids = load_csv_data(DATA_TRAIN_PATH)
 
 
-
-    X, Y,missing_vectors = divide_set(tX,y)
+    X, Y, missing_vectors = divide_set(tX,y)
 
 
     weightss = []
@@ -23,20 +22,18 @@ def main():
     Means = []
     STDS = []
 
-    degress = np.arange(5,17)
+    degress = np.arange(4,17)
     lambdas = np.logspace(-12,-3,num = 40)
-    for i in range(4):
 
-        print(i)
+    for i in range(4):
+        print("index :" + str(i))
         x_n = X[i]
         y_n = Y[i]
         x,col = cleanse_data(x_n)
         x,mean,std = standardize(x)
 
         min_degree, min_weight,min_error = find_best(x,y_n,degress,lambdas,missing_vectors[i])
-
-        print(min_error)
-    
+        print("found the min error" + str(min_error) + "  for this index")
         weightss.append(min_weight)
         degrees.append(min_degree)
         errors.append(min_error)
@@ -49,19 +46,21 @@ def main():
     _, tX_test, ids_test = load_csv_data(DATA_TEST_PATH)
 
     Y_pred = np.zeros(tX_test.shape[0])
-    X_t, _,_ = tree_test(tX_test,Y_pred)
+    X_t, _,_ = divide_set(tX_test,Y_pred)
 
     for i in range(4):
-        X_t2 = cleanse_data_col(X_t[i],cols[i])
-        X_t2 = standardize_with_info(X_t2,Means[i],STDS[i])
-        X_poly = build_poly(X_t2,degrees[i])
-        y_a = predict_labels(weightss[i], X_poly)
+        X_test = cleanse_data_col(X_t[i],cols[i])
+        X_test = standardize_with_info(X_test,Means[i],STDS[i])
+        X_test_poly = build_poly(X_test,degrees[i])
+        print(X_test_poly.shape)
+        y_a = predict_labels(weightss[i], X_test_poly)
+        print(y_a.shape)
         Y_pred[ tX_test[:,22] == i] = y_a
 
 
     OUTPUT_PATH = './final_submission.csv'
     create_csv_submission(ids_test, Y_pred, OUTPUT_PATH)
-
+    print('FINISHED')
 
 
 def find_best(tx,y,degrees, lambdas,missing_vector):
@@ -72,7 +71,6 @@ def find_best(tx,y,degrees, lambdas,missing_vector):
 
     for deg in degrees:
         tx_poly = build_poly(tx,deg)
-        print(deg)
         #tx_poly = np.concatenate((missing_vector, tx_poly),1)
         tx_tr,tx_te,y_tr,y_te = split_data(tx_poly, y, 0.9,4)
         index = 0
@@ -83,6 +81,7 @@ def find_best(tx,y,degrees, lambdas,missing_vector):
                 min_degree = deg
                 min_error = error
                 min_weight = weights_r
+
     return min_degree, min_weight,min_error
 
 

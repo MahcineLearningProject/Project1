@@ -149,12 +149,10 @@ def ridge_regression(y, tx, lambda_):
     """calculate ridge regression using normal equations
     and return the weight and the loss """
 
-    N = len(y)
-    d = tx.shape[1]
-    A = np.dot(tx.T, tx) + (lambda_*2*N) * np.eye(d)
-    b = np.dot(tx.T, y)
-    w = np.linalg.solve(A, b)
-    loss = compute_loss_least_square(y,tx,w)
+    A = np.dot(tx.T,tx) + lambda_*2*len(y)*np.eye(tx.shape[1])
+    b = np.dot(tx.T,y)
+    w = np.linalg.solve(A,b)
+    loss = compute_loss_least_square(y,tx,w) 
 
     return w, loss
     # ***************************************************

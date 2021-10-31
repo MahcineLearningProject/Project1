@@ -37,7 +37,7 @@ def divide_set(tx,y):
     for i in range(4):
 
         s = tx[tx[:,22] == i]
-
+        y_n = y[tx[:,22] == i]
         # indices to remove and delete them
         ind_c = np.append(0,np.arange(30)[(np.sum(s == -999, 0) == 0)])
         to_remove = np.argwhere(ind_c == 22)
@@ -57,7 +57,7 @@ def divide_set(tx,y):
 
         #append the new data
         X.append(s)
-        Y.append(s)
+        Y.append(y_n)
         Missing_Vectors.append(missing_vector)
     
 
@@ -123,7 +123,7 @@ def loss_really(weights,y_te,tx_te):
         calculate the real accuarcty  
     '''
     y_pred = predict_labels(weights, tx_te)
-    s = y_pred != y_te
+    s = (y_pred != y_te)
     return np.sum(s)/len(y_te)
 
 
