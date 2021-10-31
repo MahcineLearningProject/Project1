@@ -19,6 +19,7 @@ def tree_test(tx,y):
 
     X = []
     Y = []
+    Missing_Vectors = []
     for i in range(4):
         s_0 = tx[tx[:,22] == i]
         y_0 = y[tx[:,22] == i]
@@ -28,14 +29,16 @@ def tree_test(tx,y):
         if i == 0:
             ind_c = np.delete(ind_c,-1)
         s_0 = s_0[:,ind_c]
+        missing_vector = 1*(s_0[:,[0]] == -999)
         s_0 = np.where(s_0 == -999 , 0, s_0)
         X.append(s_0)
         Y.append(y_0)
+        Missing_Vectors.append(missing_vector)
     
 
 
 
-    return X,Y 
+    return X,Y,Missing_Vectors
 
 
 def balance_data_stupid(x,y,seed=6):
@@ -56,7 +59,7 @@ def balance_data_stupid(x,y,seed=6):
             if count < a1:
                 indices.append(i)
                 count = count +1
-    return (x[indices ,: ], shuffled_y[indices]) 
+    return (shuffled_tx[indices ,: ], shuffled_y[indices]) 
 
 
 def split_data(x, y, ratio, seed=6):
@@ -82,21 +85,27 @@ def split_data(x, y, ratio, seed=6):
     # ***************************************************
     return tx_tr,tx_te,y_tr,y_te
 
-
-def standardize(x, special = False):
+def standardize_with_info(x, means, stds):
     ''' fill your code in here...
 
     '''
-    y = x
-    if (special) :
-        y = y[:,1:]
-
-    centered_data = y - np.mean(y, axis=0)
-    std_data = centered_data / np.std(centered_data, axis=0)
-    if (special):
-        std_data = np.concatenate((std_data,x[:,0:1]),1)
+    centered_data = x - means
+    std_data = centered_data / stds
 
     return std_data
+
+
+
+def standardize(x):
+    ''' fill your code in here...
+
+    '''
+    means = np.mean(x, axis=0)
+    stds = np.std(x, axis=0)
+
+
+    return standardize_with_info(x,means,stds) , means, stds
+
 
 def loss_really(weights,y_te,tx_te):    
     y_pred = predict_labels(weights, tx_te)
