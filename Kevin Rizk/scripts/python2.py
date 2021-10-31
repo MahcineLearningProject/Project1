@@ -2,6 +2,40 @@ import numpy as np
 from proj1_helpers import *
 
 
+def cleanse_data(tx):
+    col =[]
+    for i in range(tx.shape[1]):
+        if np.std(tx[:,i]) > 10:
+            col.append(i)
+    return cleanse_data_col(tx,col), col
+
+def cleanse_data_col(tx,cols):
+    l = tx.copy()
+    for i in cols:
+            l[:,i] = np.log(l[:,i]+1)
+    return l
+
+def tree_test(tx,y):
+
+    X = []
+    Y = []
+    for i in range(4):
+        s_0 = tx[tx[:,22] == i]
+        y_0 = y[tx[:,22] == i]
+        ind_c = np.append(0,np.arange(30)[(np.sum(s_0 == -999, 0) == 0)])
+        to_remove = np.argwhere(ind_c == 22)
+        ind_c = np.delete(ind_c,to_remove)
+        if i == 0:
+            ind_c = np.delete(ind_c,-1)
+        s_0 = s_0[:,ind_c]
+        s_0 = np.where(s_0 == -999 , 0, s_0)
+        X.append(s_0)
+        Y.append(y_0)
+    
+
+
+
+    return X,Y 
 
 
 def balance_data_stupid(x,y,seed=6):
@@ -203,12 +237,11 @@ def calculate_gradient_sigmoid(y, tx, w):
 
 
 def learning_by_gradient_descent(y, tx, w, gamma):
-
     loss = calculate_loss_sigmoid(y,tx,w)
-
     gradient = calculate_gradient_sigmoid(y,tx,w)
-
-    w = w - gamma*gradient
+    #hessian = calculate_hessian(y,tx,w)
+    w = w-gamma*gradient
+    #w = np.linalg.solve( hessian, c)
 
     return loss, w
 
@@ -217,9 +250,7 @@ def logistic_regression(y,tx,initial_w,max_iters,gamma):
     ws = [initial_w]
     losses = []
     w = initial_w
-
     for n_iter in range(max_iters):
-
         loss , w = learning_by_gradient_descent(y,tx,w,gamma)
         losses.append(loss)
         ws.append(w)
@@ -232,5 +263,48 @@ def log_plus(x):
     y = x
     y[y < 1e-50] = 1e-50
     return(np.log(y))
+
+
+def calculate_hessian(y, tx, w):
+    S = sigmoid(tx@w).reshape(-1,1)
+    S = S*(1-S)
+    return tx.T @ (S * tx)
+
+def penalized_logistic_regression(y, tx, w, lambda_):
+    """return the loss, gradient"""
+    loss, gradient, hessian = logistic_regression(y,tx,w)
+    loss = loss + lambda_*np.linalg.norm(w,2)
+    gradient = gradient + lambda_*w
+    return loss,gradient
+
+def learning_by_penalized_gradient(y, tx, w, gamma, lambda_):
+    """
+    Do one step of gradient descent, using the penalized logistic regression.
+    Return the loss and updated w.
+    """
+    # ***************************************************
+    # INSERT YOUR CODE HERE
+    # return loss, gradient: TODO
+    # ***************************************************
+    gradient,hessian = penalized_logistic_regression(y, tx, w, lambda_)
+    
+    w = w - gamma*gradient
+    
+    return loss, w
+
+
+def pen_logistic_regression(y,tx,initial_w,max_iters,gamma):
+
+    ws = [initial_w]
+    losses = []
+    w = initial_w
+    for n_iter in range(max_iters):
+        loss , w = learning_by_gradient_descent(y,tx,w,gamma)
+        losses.append(loss)
+        ws.append(w)
+        if (n_iter % 10 == 0):
+            print(loss)
+
+    return losses, ws[-1]
 
 
