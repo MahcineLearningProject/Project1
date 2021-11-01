@@ -13,7 +13,7 @@ If python3 and numpy are already installed on your machine you can jump to Step 
 
 #Step 3: install the module numpy by running the command "pip install numpy"
 
-#Step 4: Naviguate to the data folder and extract if the zip files of train.csv and test.csv. Make sure that the csv files are in the folder named "data"
+#Step 4: Navigate to the data folder and extract the zip files of train.csv and test.csv. Make sure that the csv files are in the folder named "data"
 
 #Step 5: Open the terminal or the cmd (windows) and position yourself in the folder where the file run.py is located using the commend "cd your_folder_Path" for example
 
