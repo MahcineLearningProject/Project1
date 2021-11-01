@@ -102,7 +102,7 @@ def learning_by_gradient_descent_logistic(y, tx, w, gamma):
 
 #***************************************************************************
 
-### HERE WILL BE THE 5 ASKED METHODS TO IMPLEMENT
+### HERE WILL BE THE 6 ASKED METHODS TO IMPLEMENT
 
 #***************************************************************************
 def least_squares_GD(y, tx, initial_w, max_iters, gamma):
