@@ -128,7 +128,7 @@ def least_squares_SGD(y, tx, initial_w, max_iters, gamma):
     for minibatch_y, minibatch_tx in batch_iter(y, tx, 1, max_iters):
         grad = compute_stoch_gradient(minibatch_y, minibatch_tx, w)
         w = w - gamma*grad
-    loss = compute_loss(y, tx, w)
+    loss = compute_loss_least_square(y, tx, w)
 
     return w, loss
     # ***************************************************
@@ -141,7 +141,7 @@ def least_squares(y, tx):
     A = np.dot(tx.T, tx)
     b = np.dot(tx.T, y)
     w = np.linalg.solve(A, b)
-    loss = compute_loss(y, tx, w)
+    loss = compute_loss_least_square(y, tx, w)
     return w, loss
     # ***************************************************
     
@@ -152,7 +152,7 @@ def ridge_regression(y, tx, lambda_):
     A = np.dot(tx.T,tx) + lambda_*2*len(y)*np.eye(tx.shape[1])
     b = np.dot(tx.T,y)
     w = np.linalg.solve(A,b)
-    loss = compute_loss_least_square(y,tx,w) 
+    loss = compute_loss_least_square(y,tx,w)+ lambda_ * np.dot(w.T, w)
 
     return w, loss
     # ***************************************************

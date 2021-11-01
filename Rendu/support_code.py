@@ -141,6 +141,8 @@ def build_poly(x, degree):
 
 
 def build_poly_plus_missing(tX, degree, missing_vectors):
+    """polynomial basis functions for input data x, for j=0 up to j=degree and add offset 
+    column while adding the missing columns."""
     N = tX.shape[0]
     polx = build_poly(tX, degree)
     polx = polx.reshape(N, -1)
@@ -149,6 +151,9 @@ def build_poly_plus_missing(tX, degree, missing_vectors):
     
 
 def missing(tX):
+    """
+        Replace -999 with 0 and add the 3 distinct missing columns to give weight 
+    """
     # change the -999 to 0 in tX and 
     # create new columns missing_vectors = 1 if it misses the data for the actual variable and 0 otherwise
     print(tX[tX == -999].shape)
