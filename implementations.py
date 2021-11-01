@@ -67,8 +67,8 @@ def penalized_logistic_regression(y, tx, w, lambda_):
     # ***************************************************
     # INSERT YOUR CODE HERE
     # return loss, gradient, and Hessian: TODO
-    loss = calculate_loss(y, tx, w) + lambda_ * np.dot(w.T, w)
-    grad = calculate_gradient(y, tx, w) + 2 * lambda_ * w
+    loss = calculate_loss_sigmoid(y, tx, w) + lambda_ * np.dot(w.T, w)
+    grad = calculate_gradient_sigmoid(y, tx, w) + 2 * lambda_ * w
     return loss, grad
     # ***************************************************
 
