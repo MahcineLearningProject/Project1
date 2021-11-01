@@ -21,5 +21,11 @@ If python3 and numpy are already installed on your machine you can jump to Step 
 When the code has finished running on an index it will display several informations, especially the minimal error on this index and the degree and lambda associated. 
 When it is finished, it will display the message "FINISHED", the final error on our train set and produce a file named "final_submission.csv". This file contains our prediction for the test file.
 
+Some informations on the different files and folder. 
+The folder "data" contains the train and test data as .csv files. 
+The file "run.py" contains the executable to be runned on the command prompt. It is this file that will create the final submission.
+The file "implementations.py" contains the 6 methods we were asked to implement, and all the functions used to calculate the gradients and losses.
+The file "support_code.py" contains the methods that are used to operate on the data (polynomial basis, standardize, etc).
+The file "proj1_helpers.py" contains usefull fonctions to load the data and create submissions.
 
 
