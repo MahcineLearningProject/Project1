@@ -124,10 +124,10 @@ def least_squares_SGD(y, tx, initial_w, max_iters, gamma):
     """Stochastic gradient descent algorithm with batch size 1"""
 
     w = initial_w
-
-    for minibatch_y, minibatch_tx in batch_iter(y, tx, 1, max_iters):
-        grad = compute_stoch_gradient(minibatch_y, minibatch_tx, w)
-        w = w - gamma*grad
+    for n_iter in range(max_iters):
+        for minibatch_y, minibatch_tx in batch_iter(y, tx, 1):
+            grad = compute_stoch_gradient(minibatch_y, minibatch_tx, w)
+            w = w - gamma*grad
     loss = compute_loss_least_square(y, tx, w)
 
     return w, loss
@@ -170,7 +170,7 @@ def logistic_regression(y, tx, initial_w, max_iter, gamma):
     losses = []
     w = initial_w
     # start the logistic regression
-    for iter in range(max_iter):
+    for n_iter in range(max_iter):
         # get loss and update w.
         loss, w = learning_by_gradient_descent_logistic(y, tx, w, gamma)
         # converge criterion
@@ -192,7 +192,7 @@ def reg_logistic_regression(y, tx, lambda_, initial_w, max_iter, gamma):
     losses = []
     w = initial_w
     # start the logistic regression
-    for iter in range(max_iter):
+    for n_iter in range(max_iter):
         # get loss and update w.
         loss, w = learning_by_penalized_gradient(y, tx, w, gamma, lambda_)
         # converge criterion
