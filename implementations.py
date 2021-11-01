@@ -125,7 +125,7 @@ def least_squares_SGD(y, tx, initial_w, max_iters, gamma):
 
     w = initial_w
     for n_iter in range(max_iters):
-        for minibatch_y, minibatch_tx in batch_iter(y, tx, 1):
+        for minibatch_y, minibatch_tx in batch_iter(y, tx, 1, num_batches = 1,shuffle = True):
             grad = compute_stoch_gradient(minibatch_y, minibatch_tx, w)
             w = w - gamma*grad
     loss = compute_loss_least_square(y, tx, w)
