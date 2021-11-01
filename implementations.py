@@ -80,6 +80,7 @@ def learning_by_penalized_gradient(y, tx, w, gamma, lambda_):
 
     loss, grad = penalized_logistic_regression(y, tx, w, lambda_)
     w = w - gamma * grad
+    loss = calculate_loss_sigmoid(y, tx, w) + lambda_ * np.dot(w.T, w)
     # ***************************************************
     return loss, w
 
