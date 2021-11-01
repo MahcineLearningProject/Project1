@@ -26,9 +26,9 @@ def cleanse_data_col(tx,cols):
 
 
 def divide_set(tx,y):
-    """ Divide the set into 4 smaller depending of the value of the column 22 and 
+    """ Divide the set into 4 smaller sets depending of the value of the column 22 and 
     removes the column where there is undefinied set. 
-    Returb the 4 different set with vectors containing the missing value of the first column """
+    Return the 4 different sets with vectors containing the missing value of the first column """
 
     X = []
     Y = []
@@ -67,8 +67,8 @@ def divide_set(tx,y):
 
 
 def balance_data(x,y,seed=1):
-    """ This code will remove some subset to make the code more balanced, in fact it will 
-    return the new baalnced x and y"""
+    """ This code will remove some subset to make the data more balanced, in fact it will 
+    return the new balanced x and y"""
 
     #randomnly shuffle to make it more random
     np.random.seed(seed)
@@ -109,7 +109,7 @@ def standardize_with_info(x, means, stds):
 def standardize(x):
     ''' 
         standardize the data with the mean and std if each column, and return the means and 
-        the standart divation.
+        the standard deviation.
     '''
     means = np.mean(x, axis=0)
     stds = np.std(x, axis=0)
@@ -120,7 +120,7 @@ def standardize(x):
 
 def loss_really(weights,y_te,tx_te): 
     '''
-        calculate the real accuarcty  
+        calculate the real error = 1 - accuracy  
     '''
     y_pred = predict_labels(weights, tx_te)
     s = (y_pred != y_te)
@@ -152,11 +152,9 @@ def build_poly_plus_missing(tX, degree, missing_vectors):
 
 def missing(tX):
     """
-        Replace -999 with 0 and add the 3 distinct missing columns to give weight 
+        Return tX where the -999 are replaced by 0 and return the 3 distinct missing columns to give weight 
+        The missing columns: missing_vectors = 1 if it misses the data for the actual variable and 0 otherwise
     """
-    # change the -999 to 0 in tX and 
-    # create new columns missing_vectors = 1 if it misses the data for the actual variable and 0 otherwise
-    print(tX[tX == -999].shape)
     missing_vectors = np.array([])
     n_par = tX.shape[1]
     for i in range(n_par):
@@ -171,7 +169,6 @@ def missing(tX):
                 missing_vectors = miss
             else:
                  missing_vectors = np.append(missing_vectors, miss, axis = 1)
-    print(tX[tX == -999].shape)
     missing_vectors = missing_vectors[:, (0, 1, 5)] # only take differents columns of missing_vectors
     return tX, missing_vectors
 
