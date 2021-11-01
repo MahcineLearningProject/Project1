@@ -7,3 +7,6 @@
 #Step 1 : Go to the data folder and extract the zip file of train.csv and test.csv
 #Step 2: Open the terminal or the cmd (windows) and position your self using the commend "cd your_Path" in the folder.
 #Step 3: Run on the cmd or terminal the commend "pyhton3 run.py", waiting some minutes (There will be some info on the command line in which step we are ) before the code is finished and it will produce "final_submission.csv" file which will be the prediction of the test file.
+
+
+
