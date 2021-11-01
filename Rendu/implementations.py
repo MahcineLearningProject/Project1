@@ -1,6 +1,6 @@
 import numpy as np
 from proj1_helpers import *
-
+from support_code import *
 
 
 
@@ -158,7 +158,13 @@ def ridge_regression(y, tx, lambda_):
     # ***************************************************
 
 def logistic_regression(y, tx, initial_w, max_iter, gamma):
-    """ logistic regression using gradient method""" 
+    """ logistic regression using gradient method
+    Note that this method is used for y which or 0 or -1
+    If want to use for y with other values, you need to apply a transofrmation on y,
+    so that it maps to 0 and 1,
+    For example if y takes values -1 or 1 , make the transofrmation 1/2(y+1)
+
+    """ 
     # init parameters
     threshold = 1e-8
     losses = []
@@ -166,7 +172,7 @@ def logistic_regression(y, tx, initial_w, max_iter, gamma):
     # start the logistic regression
     for iter in range(max_iter):
         # get loss and update w.
-        loss, w = learning_by_gradient_descent(y, tx, w, gamma)
+        loss, w = learning_by_gradient_descent_logistic(y, tx, w, gamma)
         # converge criterion
         losses.append(loss)
         if len(losses) > 1 and np.abs(losses[-1] - losses[-2]) < threshold:
@@ -175,7 +181,12 @@ def logistic_regression(y, tx, initial_w, max_iter, gamma):
     return w, loss
 
 def reg_logistic_regression(y, tx, lambda_, initial_w, max_iter, gamma):
-    """ regularized logistic regression using gradient method""" 
+    """ regularized logistic regression using gradient method
+    Note that this method is used for y which or 0 or -1
+    If want to use for y with other values, you need to apply a transofrmation on y,
+    so that it maps to 0 and 1,
+    For example if y takes values -1 or 1 , make the transofrmation 1/2(y+1)
+    """ 
     # init parameters
     threshold = 1e-8
     losses = []
