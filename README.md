@@ -5,16 +5,20 @@ This project was done for the project 1 of "EPFL Higgs boson challenge". It will
 Here is a guideline (subjective) and how to proceed and run the program to make the predictions file. To be able to run the program you need to have python 3 installed. Python 2.7 will not work and python 3.8 could work but was not tested.
 
 The code is documented if you want to make any change or use another fucntion or to understand what each function does.
+If python3 and numpy are already installed on your machine you can jump to Step 4
 
-#Step 1: open a command window
+#Step 1: open a command window. 
 
 #Step 2: check that python is installed on you machine by running the command "python"
 
-#Step 1: Go to the data folder and extract if not already done the zip file of train.csv and test.csv. Make sure that the csv files are in the folder data
+#Step 3: install the module numpy by running the command "pip install numpy"
 
-#Step 2: Open the terminal or the cmd (windows) and position yourself in the folder where the file run.py is located using the commend "cd your_folder_Path" for example or any other method. 
+#Step 4: Naviguate to the data folder and extract if the zip files of train.csv and test.csv. Make sure that the csv files are in the folder named "data"
 
-#Step 3: Run on the cmd or terminal the command "python3 run.py". The code will run and will let you know at which step you are as the code is running. When it is finished, it will print the message "FINISHED" and produce a file named "final_submission.csv". This file contains our prediction for the test file.
+#Step 5: Open the terminal or the cmd (windows) and position yourself in the folder where the file run.py is located using the commend "cd your_folder_Path" for example
+
+#Step 6: Run on the cmd or terminal the command "python3 run.py" or simply "python run.py". The code will run and will let you know at which step you are as the code is running. There are four indexes, ranging from 0 to 3 and degrees goes from 4 to 18. When the code has finished running on an index it will display several informations, especially the minimal error and the degree and lambda associated. 
+When it is finished, it will display the message "FINISHED", the final error on our train set and produce a file named "final_submission.csv". This file contains our prediction for the test file.
 
 
 
