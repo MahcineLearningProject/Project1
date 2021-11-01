@@ -17,7 +17,8 @@ If python3 and numpy are already installed on your machine you can jump to Step 
 
 #Step 5: Open the terminal or the cmd (windows) and position yourself in the folder where the file run.py is located using the commend "cd your_folder_Path" for example
 
-#Step 6: Run on the cmd or terminal the command "python3 run.py" or simply "python run.py". The code will run and will let you know at which step you are as the code is running. There are four indexes, ranging from 0 to 3 and degrees goes from 4 to 18. When the code has finished running on an index it will display several informations, especially the minimal error and the degree and lambda associated. 
+#Step 6: Run on the cmd or terminal the command "python3 run.py" or simply "python run.py". The code will run and will let you know at which step you are as the code is running. There are four indexes, ranging from 0 to 3 and degrees goes from 4 to 18. Each value of index correspond to one of the four group that compose our data.
+When the code has finished running on an index it will display several informations, especially the minimal error on this index and the degree and lambda associated. 
 When it is finished, it will display the message "FINISHED", the final error on our train set and produce a file named "final_submission.csv". This file contains our prediction for the test file.
 
 
